@@ -9,6 +9,9 @@ npm install      # μόνο την πρώτη φορά
 npm run dev      # ανοίξτε http://localhost:4321 στον browser
 ```
 
+Υπάρχουν προσωρινά δύο εκδοχές για σύγκριση: η αρχική στο `/` και μια πιο λιτή στο
+`/minimal` (`src/pages/minimal.astro`). Όταν διαλέξουμε, η άλλη σβήνεται.
+
 Το `npm run build` φτιάχνει το τελικό site στον φάκελο `dist/` και το `npm run preview` το σερβίρει τοπικά.
 
 ## Νέο editorial
