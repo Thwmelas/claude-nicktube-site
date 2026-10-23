@@ -25,12 +25,9 @@ const instagram = 'https://www.instagram.com/nickospanagiotopoulos';
 </aside>
 
 <header class="header">
-  <div class="name-block">
-    <a href="#work">
-      <div class="name">NIKOS<br> PANAGIOTOPOULOS</div>
-    </a>
-    <div class="name-rule"></div>
-  </div>
+  <a href="#work">
+    <div class="name">NIKOS PANAGIOTOPOULOS</div>
+  </a>
 </header>
 
 <main>
@@ -163,21 +160,6 @@ document.querySelectorAll('.menu-panel a').forEach(function(link) {
 </Layout>
 
 <style>
-  .name-block {
-    display: inline-block;
-  }
-
-  /* Στο κινητό το όνομα σπάει σε δύο σειρές, ώστε η γραμμή να έχει το πλάτος του */
-  .name br {
-    display: none;
-  }
-
-  .name-rule {
-    height: 2px;
-    margin-top: 14px;
-    background: var(--text);
-  }
-
   .covers {
     display: grid;
     gap: 28px;
@@ -205,14 +187,6 @@ document.querySelectorAll('.menu-panel a').forEach(function(link) {
   }
 
   @media (max-width: 760px) {
-    .name br {
-      display: inline;
-    }
-
-    .name-rule {
-      margin-top: 10px;
-    }
-
     .covers {
       gap: 18px;
       width: min(100%, 420px);
