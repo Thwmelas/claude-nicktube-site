@@ -10,6 +10,12 @@ const magazineSections = [
 ];
 const instagram = 'https://www.instagram.com/nickospanagiotopoulos';
 const email = 'nickofow@gmail.com';
+
+// Πολλά έτοιμα μεγέθη ανά φωτογραφία, ώστε κάθε οθόνη να παίρνει ένα αρχείο σχεδόν ίσο με
+// το μέγεθος που δείχνει. Αλλιώς ο browser μικραίνει πολύ τη φωτογραφία στον υπολογιστή
+// και τη «σκληραίνει».
+const photoWidths = [360, 420, 520, 640, 760, 844, 960, 1040, 1280];
+const photoQuality = 90;
 ---
 
 <Layout>
@@ -42,7 +48,8 @@ const email = 'nickofow@gmail.com';
       <a class="preview" href={`#editorial-${e.slug}`} aria-label={`Open ${e.title} editorial`}>
         <Image
           src={e.cover}
-          widths={[480, 840, 1040, 1280]}
+          widths={photoWidths}
+          quality={photoQuality}
           sizes="(max-width: 760px) min(calc(100vw - 36px), 420px), 520px"
           loading="eager"
           alt={`${e.title} preview`}
@@ -161,7 +168,8 @@ const email = 'nickofow@gmail.com';
       {e.photos.map((photo, i) => (
         <Image
           src={photo}
-          widths={[640, 960, 1280]}
+          widths={photoWidths}
+          quality={photoQuality}
           sizes="(max-width: 760px) calc(100vw - 36px), min(calc(100vw - 56px), 844px)"
           alt={`${e.title} editorial image ${i + 1}`}
         />
@@ -236,12 +244,26 @@ document.querySelectorAll('.menu-panel a').forEach(function(link) {
     current = (index + photos.length) % photos.length;
     var photo = photos[current];
     view.classList.remove('is-shown');
-    view.srcset = photo.srcset;
-    view.sizes = '100vw';
-    view.src = photo.src;
+    view.src = bestFile(photo);
     view.alt = photo.alt;
     // Νέο frame, ώστε να ξαναπαίξει το απαλό ζουμ σε κάθε φωτογραφία.
     requestAnimationFrame(function() { view.classList.add('is-shown'); });
+  }
+
+  // Το μικρότερο έτοιμο αρχείο που καλύπτει το μέγεθος της φωτογραφίας στην προβολή (ίδια
+  // όρια με το CSS της .lightbox-img). Το διαλέγουμε εμείς, γιατί ο browser θα ξανάπαιρνε
+  // το μεγαλύτερο αρχείο της λίστας και θα το μίκραινε πολύ.
+  function bestFile(photo) {
+    var mobile = window.matchMedia('(max-width: 760px)').matches;
+    var maxWidth = mobile ? window.innerWidth : window.innerWidth - 160;
+    var maxHeight = window.innerHeight - (mobile ? 140 : 80);
+    var needed = Math.min(maxWidth, maxHeight * photo.width / photo.height) * window.devicePixelRatio;
+    var files = photo.srcset.split(',').map(function(entry) {
+      var parts = entry.trim().split(/\s+/);
+      return { url: parts[0], width: parseInt(parts[1], 10) };
+    }).sort(function(a, b) { return a.width - b.width; });
+    var match = files.filter(function(file) { return file.width >= needed; })[0];
+    return (match || files[files.length - 1]).url;
   }
 
   function open(photo) {
