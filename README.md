@@ -44,5 +44,17 @@ src/
   lib/editorials.ts       διαβάζει τους φακέλους των editorials
   layouts/Layout.astro    <head> και <body>
   pages/index.astro       η σελίδα (μενού, αρχική, Magazines, Contact, γκαλερί)
-  styles/global.css       τα στυλ του αρχικού προτύπου, αυτούσια
+  styles/global.css       τα κοινά στυλ του site
+worker/index.js           σερβίρει το site στο Cloudflare και στέλνει τα email της φόρμας
 ```
+
+## Φόρμα επικοινωνίας
+
+Η φόρμα στέλνει τα μηνύματα στο `nickofow@gmail.com` μέσω του `worker/index.js`, που τρέχει
+στο Cloudflare. Χρειάζεται το **Email Routing** ενεργό στο domain και το `nickofow@gmail.com`
+επιβεβαιωμένο ως destination address.
+
+Με το `npm run dev` η φόρμα δεν στέλνει (τρέχει μόνο το Astro). Για τοπική δοκιμή:
+`npm run build` και μετά `npx wrangler dev` στο http://localhost:8787. Τα email
+αποθηκεύονται τότε ως αρχεία στον φάκελο `.wrangler/` αντί να σταλούν.
+

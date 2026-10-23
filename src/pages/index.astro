@@ -5,6 +5,7 @@ import { getEditorials } from '../lib/editorials';
 
 const editorials = getEditorials();
 const instagram = 'https://www.instagram.com/nickospanagiotopoulos';
+const email = 'nickofow@gmail.com';
 ---
 
 <Layout>
@@ -89,7 +90,7 @@ const instagram = 'https://www.instagram.com/nickospanagiotopoulos';
     <div class="page-grid">
       <div class="page-label">Form</div>
       <div class="page-content">
-        <form class="contact-form" action="mailto:nikos@email.com" method="post" enctype="text/plain">
+        <form class="contact-form" action="/api/contact" method="post">
           <div class="form-row">
             <label for="first-name">Name</label>
             <input id="first-name" name="Name" type="text" autocomplete="given-name" required>
@@ -110,15 +111,22 @@ const instagram = 'https://www.instagram.com/nickospanagiotopoulos';
             <textarea id="message" name="Message" required></textarea>
           </div>
 
+          <div class="form-row form-trap" aria-hidden="true">
+            <label for="website">Website</label>
+            <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+          </div>
+
           <button class="submit-button" type="submit">Send</button>
         </form>
+
+        <p class="form-status" role="status" aria-live="polite"></p>
       </div>
     </div>
 
     <div class="page-grid">
       <div class="page-label">Direct</div>
       <div class="page-content">
-        <a href="mailto:nikos@email.com">nikos@email.com</a><br>
+        <a href={`mailto:${email}`}>{email}</a><br>
         <a href={instagram} target="_blank">@nickospanagiotopoulos</a>
       </div>
     </div>
@@ -149,12 +157,42 @@ const instagram = 'https://www.instagram.com/nickospanagiotopoulos';
   </div>
 ))}
 
-<script is:inline>
+<script is:inline define:vars={{ email }}>
 document.querySelectorAll('.menu-panel a').forEach(function(link) {
   link.addEventListener('click', function() {
     document.getElementById('menu-toggle').checked = false;
   });
 });
+
+// Φόρμα επικοινωνίας: στέλνει το μήνυμα χωρίς να φύγει ο επισκέπτης από τη σελίδα.
+(function() {
+  var form = document.querySelector('.contact-form');
+  var status = document.querySelector('.form-status');
+  var button = form.querySelector('button');
+  var sentText = 'Thank you, your message has been sent.';
+  var errorText = 'Something went wrong. Please email ' + email + ' directly.';
+
+  // Χωρίς JavaScript η φόρμα επιστρέφει εδώ με ?sent=1 ή ?error=1.
+  var params = new URLSearchParams(location.search);
+  if (params.has('sent')) status.textContent = sentText;
+  if (params.has('error')) status.textContent = errorText;
+
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+    button.disabled = true;
+    status.textContent = 'Sending…';
+
+    fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } })
+      .then(function(response) { return response.json(); })
+      .then(function(result) {
+        if (!result.ok) throw new Error('not sent');
+        form.reset();
+        status.textContent = sentText;
+      })
+      .catch(function() { status.textContent = errorText; })
+      .finally(function() { button.disabled = false; });
+  });
+})();
 </script>
 </Layout>
 
@@ -182,6 +220,18 @@ document.querySelectorAll('.menu-panel a').forEach(function(link) {
   .covers .preview:focus-visible img,
   .covers .preview:active img {
     filter: brightness(.7);
+  }
+
+  .form-trap {
+    position: absolute;
+    left: -9999px;
+  }
+
+  .form-status {
+    min-height: 1.5em;
+    margin: 14px 0 0;
+    color: var(--muted);
+    font-size: 12px;
   }
 
   .editorial-text {

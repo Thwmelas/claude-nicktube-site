@@ -1,8 +1,18 @@
-// Ρυθμίσεις για το ανέβασμα στο Cloudflare: σερβίρει το έτοιμο site από τον φάκελο dist/.
+// Ρυθμίσεις για το ανέβασμα στο Cloudflare: σερβίρει το έτοιμο site από τον φάκελο dist/
+// και τρέχει το worker/index.js για τη φόρμα επικοινωνίας (/api/contact).
 {
   "name": "claude-nicktube-site",
+  "main": "worker/index.js",
   "compatibility_date": "2026-10-01",
   "assets": {
-    "directory": "./dist"
-  }
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  },
+  "send_email": [
+    {
+      "name": "SEND_EMAIL",
+      "destination_address": "nickofow@gmail.com"
+    }
+  ]
 }
