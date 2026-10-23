@@ -310,6 +310,7 @@ footer {
   height: auto;
   display: block;
   margin-bottom: 22px;
+  cursor: zoom-in;
 }
 
 @media (max-width: 760px) {
