@@ -1,6 +1,7 @@
 ---
 // Δοκιμαστική αρχική (http://localhost:4321/preview): εξώφυλλα σε πλέγμα 2 στηλών
-// και μια μικρή γραμμή κάτω από το όνομα. Όταν αποφασίσουμε, σβήνεται.
+// χωρίς τίτλους, κομμένα τετράγωνα (ή 2:3 με ?ratio=2-3), και μια μικρή γραμμή
+// κάτω από το όνομα. Όταν αποφασίσουμε, σβήνεται.
 import Layout from '../layouts/Layout.astro';
 import { getEditorials } from '../lib/editorials';
 
@@ -46,15 +47,9 @@ const instagram = 'https://www.instagram.com/nickospanagiotopoulos';
 <main>
   <div class="grid">
     {grid.map((e) => (
-      <div class="grid-item">
-        <div class="meta">
-          <span>{e.title}</span>
-        </div>
-
-        <a class="preview" href={`#editorial-${e.slug}`} aria-label={`Open ${e.title} editorial`}>
-          <img src={e.cover.src} width={e.cover.width} height={e.cover.height} alt={`${e.title} preview`}>
-        </a>
-      </div>
+      <a class="preview" href={`#editorial-${e.slug}`} aria-label={`Open ${e.title} editorial`}>
+        <img src={e.cover.src} width={e.cover.width} height={e.cover.height} alt={`${e.title} preview`}>
+      </a>
     ))}
   </div>
 
@@ -156,12 +151,13 @@ const instagram = 'https://www.instagram.com/nickospanagiotopoulos';
     <div class="editorial-top">
       <div>
         <div class="editorial-title">{e.title}</div>
-        <div class="editorial-sub">Editorial gallery</div>
+        <div class="editorial-sub">{e.description ?? 'Editorial gallery'}</div>
       </div>
       <a class="close-editorial" href="#work">Close</a>
     </div>
 
     <div class="editorial-body">
+      {e.text && <p class="editorial-text">{e.text}</p>}
       {e.photos.map((photo, i) => (
         <img src={photo.src} width={photo.width} height={photo.height} alt={`${e.title} editorial image ${i + 1}`}>
       ))}
@@ -170,6 +166,10 @@ const instagram = 'https://www.instagram.com/nickospanagiotopoulos';
 ))}
 
 <script is:inline>
+if (new URLSearchParams(location.search).get('ratio') === '2-3') {
+  document.documentElement.classList.add('ratio-23');
+}
+
 document.querySelectorAll('.menu-panel a').forEach(function(link) {
   link.addEventListener('click', function() {
     document.getElementById('menu-toggle').checked = false;
@@ -191,12 +191,30 @@ document.querySelectorAll('.menu-panel a').forEach(function(link) {
   .grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 64px 28px;
+    gap: 28px;
   }
 
-  .grid .meta,
   .grid .preview {
     width: 100%;
+  }
+
+  .grid .preview img {
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    object-position: center 25%;
+  }
+
+  :global(.ratio-23) .grid .preview img {
+    aspect-ratio: 2 / 3;
+  }
+
+  .editorial-text {
+    max-width: 560px;
+    margin: 0 0 36px;
+    color: var(--muted);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
   }
 
   @media (max-width: 760px) {
@@ -207,7 +225,7 @@ document.querySelectorAll('.menu-panel a').forEach(function(link) {
 
     .grid {
       grid-template-columns: 1fr;
-      gap: 48px;
+      gap: 28px;
       width: min(100%, 420px);
       margin: 0 auto;
     }
