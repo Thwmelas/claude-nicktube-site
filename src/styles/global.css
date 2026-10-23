@@ -126,7 +126,6 @@ main {
   width: 100%;
   height: auto;
   display: block;
-  filter: grayscale(100%);
 }
 
 footer {
@@ -312,7 +311,6 @@ footer {
   height: auto;
   display: block;
   margin-bottom: 22px;
-  filter: grayscale(100%);
 }
 
 @media (max-width: 760px) {
