@@ -1,6 +1,6 @@
 ---
 // Δοκιμαστική αρχική (http://localhost:4321/preview): εξώφυλλα σε πλέγμα 2 στηλών
-// χωρίς τίτλους, κομμένα τετράγωνα (ή 2:3 με ?ratio=2-3), και μια μικρή γραμμή
+// χωρίς τίτλους, κομμένα τετράγωνα (ή 2:3 με ?ratio=2-3), και μια λεπτή γραμμή
 // κάτω από το όνομα. Όταν αποφασίσουμε, σβήνεται.
 import Layout from '../layouts/Layout.astro';
 import { getEditorials } from '../lib/editorials';
@@ -41,7 +41,7 @@ const instagram = 'https://www.instagram.com/nickospanagiotopoulos';
   <a href="#work">
     <div class="name">NIKOS PANAGIOTOPOULOS</div>
   </a>
-  <div class="tagline">Fashion &amp; Portrait Photographer — Athens</div>
+  <div class="name-rule"></div>
 </header>
 
 <main>
@@ -53,7 +53,6 @@ const instagram = 'https://www.instagram.com/nickospanagiotopoulos';
     ))}
   </div>
 
-  <div class="home-note">Selected editorial work.</div>
 </main>
 
 <footer>
@@ -179,13 +178,11 @@ document.querySelectorAll('.menu-panel a').forEach(function(link) {
 </Layout>
 
 <style>
-  .tagline {
-    margin-top: 10px;
-    color: var(--muted);
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 12px;
-    letter-spacing: .08em;
-    text-transform: uppercase;
+  .name-rule {
+    width: 60px;
+    height: 1px;
+    margin: 18px auto 0;
+    background: var(--text);
   }
 
   .grid {
@@ -218,11 +215,6 @@ document.querySelectorAll('.menu-panel a').forEach(function(link) {
   }
 
   @media (max-width: 760px) {
-    .tagline {
-      font-size: 11px;
-      letter-spacing: .06em;
-    }
-
     .grid {
       grid-template-columns: 1fr;
       gap: 28px;

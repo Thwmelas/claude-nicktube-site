@@ -140,17 +140,6 @@ main {
   filter: grayscale(100%);
 }
 
-.home-note {
-  width: min(100%, 520px);
-  margin: 95px auto 0;
-  padding-top: 22px;
-  border-top: 1px solid var(--line);
-  color: var(--muted);
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 12px;
-  letter-spacing: .03em;
-}
-
 footer {
   max-width: 980px;
   margin: 0 auto;
@@ -386,11 +375,6 @@ footer {
 
   .preview {
     width: min(100%, 420px);
-  }
-
-  .home-note {
-    width: min(100%, 420px);
-    margin-top: 64px;
   }
 
   footer {
