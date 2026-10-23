@@ -9,6 +9,9 @@
     "binding": "ASSETS",
     "run_worker_first": ["/api/*"]
   },
+  "observability": {
+    "enabled": true
+  },
   "send_email": [
     {
       "name": "SEND_EMAIL",
