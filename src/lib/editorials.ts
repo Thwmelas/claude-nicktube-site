@@ -4,12 +4,17 @@ import type { ImageMetadata } from 'astro';
 //   - τις φωτογραφίες του (εμφανίζονται με αλφαβητική σειρά ονόματος αρχείου)
 //   - ένα editorial.json με τίτλο, εικόνα εξωφύλλου και προαιρετικά κείμενο
 
+export const categories = ['covers', 'editorials'] as const;
+export type Category = (typeof categories)[number];
+
 type EditorialInfo = {
   title: string;
   cover: string;
   description?: string;
   text?: string;
   order?: number;
+  category?: Category;
+  magazineOrder?: number;
 };
 
 export type Editorial = {
@@ -18,6 +23,8 @@ export type Editorial = {
   description?: string;
   text?: string;
   order: number;
+  category: Category;
+  magazineOrder: number;
   cover: ImageMetadata;
   photos: ImageMetadata[];
 };
@@ -53,6 +60,12 @@ export function getEditorials(): Editorial[] {
           `src/editorials/${slug}/editorial.json: η εικόνα εξωφύλλου "${info.cover}" δεν βρέθηκε στον φάκελο.`,
         );
       }
+      const category = info.category ?? 'editorials';
+      if (!categories.includes(category)) {
+        throw new Error(
+          `src/editorials/${slug}/editorial.json: το "category" πρέπει να είναι ${categories.map((c) => `"${c}"`).join(' ή ')}.`,
+        );
+      }
 
       return {
         slug,
@@ -60,9 +73,18 @@ export function getEditorials(): Editorial[] {
         description: info.description,
         text: info.text,
         order: info.order ?? Number.MAX_SAFE_INTEGER,
+        category,
+        magazineOrder: info.magazineOrder ?? Number.MAX_SAFE_INTEGER,
         cover: images[coverPath],
         photos: files.map((p) => images[p]),
       };
     })
     .sort((a, b) => a.order - b.order || byName(a.title, b.title));
+}
+
+// Τα editorials μιας κατηγορίας της σελίδας Magazines, με τη δική τους σειρά (magazineOrder).
+export function inCategory(editorials: Editorial[], category: Category): Editorial[] {
+  return editorials
+    .filter((e) => e.category === category)
+    .sort((a, b) => a.magazineOrder - b.magazineOrder || a.order - b.order);
 }

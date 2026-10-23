@@ -24,7 +24,9 @@ npm run dev      # ανοίξτε http://localhost:4321 στον browser
      "title": "Summer Light",
      "cover": "01.jpg",
      "description": "Fashion story",
-     "order": 2
+     "order": 2,
+     "category": "covers",
+     "magazineOrder": 1
    }
    ```
 
@@ -33,6 +35,8 @@ npm run dev      # ανοίξτε http://localhost:4321 στον browser
    - `description` (προαιρετικό): εμφανίζεται κάτω από τον τίτλο στη γκαλερί και στη λίστα της σελίδας Magazines.
    - `text` (προαιρετικό): μια παράγραφος πάνω από τις φωτογραφίες της γκαλερί.
    - `order` (προαιρετικό): σειρά στην αρχική (μικρότερο νούμερο = πιο πάνω).
+   - `category` (προαιρετικό): σε ποια κατηγορία της σελίδας Magazines μπαίνει, `"covers"` ή `"editorials"` (αν λείπει, `"editorials"`).
+   - `magazineOrder` (προαιρετικό): σειρά μέσα στην κατηγορία του Magazines, ανεξάρτητη από το `order`.
 
 Οι φωτογραφίες εμφανίζονται όπως είναι τα αρχεία (έγχρωμες ή ασπρόμαυρες).
 

@@ -1,9 +1,13 @@
 ---
 import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
-import { getEditorials } from '../lib/editorials';
+import { getEditorials, inCategory } from '../lib/editorials';
 
 const editorials = getEditorials();
+const magazineSections = [
+  { label: 'Covers', items: inCategory(editorials, 'covers') },
+  { label: 'Editorials', items: inCategory(editorials, 'editorials') },
+];
 const instagram = 'https://www.instagram.com/nickospanagiotopoulos';
 const email = 'nickofow@gmail.com';
 ---
@@ -64,16 +68,25 @@ const email = 'nickofow@gmail.com';
   </div>
 
   <div class="page-body">
-    <div class="page-grid">
-      <div class="page-label">Editorials</div>
-      <div class="page-content">
-        <ul>
-          {editorials.map((e) => (
-            <li>{e.description ? `${e.title} — ${e.description}` : e.title}</li>
-          ))}
-        </ul>
+    {magazineSections.map((section) => (
+      <div class="page-grid">
+        <div class="page-label magazine-label">{section.label}</div>
+        <div class="page-content">
+          {section.items.length ? (
+            <ul class="magazine-list">
+              {section.items.map((e) => (
+                <li>
+                  <a class="magazine-title" href={`#editorial-${e.slug}`}>{e.title}</a>
+                  {e.description && <div class="magazine-sub">{e.description}</div>}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p class="magazine-empty">Coming soon.</p>
+          )}
+        </div>
       </div>
-    </div>
+    ))}
   </div>
 </div>
 
@@ -215,11 +228,55 @@ document.querySelectorAll('.menu-panel a').forEach(function(link) {
     transition: filter .35s ease;
   }
 
-  /* Απαλό σκούρεμα του εξωφύλλου στο hover (υπολογιστής) και στο πάτημα (κινητό) */
-  .covers .preview:hover img,
+  /* Απαλό σκούρεμα του εξωφύλλου στο hover (υπολογιστής) και στο πάτημα (κινητό).
+     Το hover μόνο σε συσκευές με ποντίκι, αλλιώς στο κινητό «κολλάει» μετά το πάτημα. */
   .covers .preview:focus-visible img,
   .covers .preview:active img {
     filter: brightness(.7);
+  }
+
+  @media (hover: hover) {
+    .covers .preview:hover img {
+      filter: brightness(.7);
+    }
+  }
+
+  .magazine-label {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-size: 18px;
+  }
+
+  .magazine-list li {
+    margin-bottom: 22px;
+  }
+
+  .magazine-title {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--text);
+    transition: opacity .2s ease;
+  }
+
+  .magazine-title:active {
+    opacity: .6;
+  }
+
+  @media (hover: hover) {
+    .magazine-title:hover {
+      opacity: .6;
+    }
+  }
+
+  .magazine-sub {
+    margin-top: 4px;
+    font-size: 12px;
+  }
+
+  .magazine-empty {
+    margin: 0;
   }
 
   .form-trap {

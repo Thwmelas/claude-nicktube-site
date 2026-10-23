@@ -2,5 +2,7 @@
   "title": "Sea Boy",
   "cover": "01.jpg",
   "description": "Editorial portrait study",
-  "order": 1
+  "order": 1,
+  "category": "editorials",
+  "magazineOrder": 1
 }
