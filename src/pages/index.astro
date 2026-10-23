@@ -220,7 +220,7 @@ document.querySelectorAll('.menu-panel a').forEach(function(link) {
   });
 })();
 
-// Lightbox: πατώντας μια φωτογραφία μέσα σε editorial, ανοίγει μόνη της σε σκούρο φόντο,
+// Lightbox: πατώντας μια φωτογραφία μέσα σε editorial, ανοίγει μόνη της σε άσπρο φόντο,
 // με βελάκια για την προηγούμενη / επόμενη φωτογραφία του ίδιου editorial.
 (function() {
   var box = document.querySelector('.lightbox');
@@ -274,7 +274,7 @@ document.querySelectorAll('.menu-panel a').forEach(function(link) {
   prevButton.addEventListener('click', function() { show(current - 1); });
   nextButton.addEventListener('click', function() { show(current + 1); });
 
-  // Κλικ στο σκούρο φόντο (όχι στη φωτογραφία ή στα κουμπιά) κλείνει.
+  // Κλικ στο φόντο (όχι στη φωτογραφία ή στα κουμπιά) κλείνει.
   box.addEventListener('click', function(event) {
     if (event.target === box) close();
   });
@@ -378,7 +378,7 @@ document.querySelectorAll('.menu-panel a').forEach(function(link) {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #0c0c0c;
+    background: var(--bg);
     opacity: 0;
     visibility: hidden;
     transition: opacity .25s ease, visibility .25s ease;
@@ -412,7 +412,7 @@ document.querySelectorAll('.menu-panel a').forEach(function(link) {
     padding: 0;
     border: 0;
     background: transparent;
-    color: #fff;
+    color: var(--text);
     cursor: pointer;
     opacity: .7;
     transition: opacity .2s ease;
@@ -421,7 +421,7 @@ document.querySelectorAll('.menu-panel a').forEach(function(link) {
 
   .lightbox button:focus-visible {
     opacity: 1;
-    outline: 1px solid rgba(255, 255, 255, .6);
+    outline: 1px solid var(--line);
     outline-offset: 2px;
   }
 
