@@ -25,23 +25,22 @@ const instagram = 'https://www.instagram.com/nickospanagiotopoulos';
 </aside>
 
 <header class="header">
-  <a href="#work">
-    <div class="name">NIKOS PANAGIOTOPOULOS</div>
-  </a>
+  <div class="name-block">
+    <a href="#work">
+      <div class="name">NIKOS<br> PANAGIOTOPOULOS</div>
+    </a>
+    <div class="name-rule"></div>
+  </div>
 </header>
 
 <main>
-  {editorials.map((e) => (
-    <>
-      <div class="meta">
-        <span>{e.title}</span>
-      </div>
-
+  <div class="covers">
+    {editorials.map((e) => (
       <a class="preview" href={`#editorial-${e.slug}`} aria-label={`Open ${e.title} editorial`}>
         <img src={e.cover.src} width={e.cover.width} height={e.cover.height} alt={`${e.title} preview`}>
       </a>
-    </>
-  ))}
+    ))}
+  </div>
 
 </main>
 
@@ -140,12 +139,13 @@ const instagram = 'https://www.instagram.com/nickospanagiotopoulos';
     <div class="editorial-top">
       <div>
         <div class="editorial-title">{e.title}</div>
-        <div class="editorial-sub">Editorial gallery</div>
+        <div class="editorial-sub">{e.description ?? 'Editorial gallery'}</div>
       </div>
       <a class="close-editorial" href="#work">Close</a>
     </div>
 
     <div class="editorial-body">
+      {e.text && <p class="editorial-text">{e.text}</p>}
       {e.photos.map((photo, i) => (
         <img src={photo.src} width={photo.width} height={photo.height} alt={`${e.title} editorial image ${i + 1}`}>
       ))}
@@ -161,3 +161,61 @@ document.querySelectorAll('.menu-panel a').forEach(function(link) {
 });
 </script>
 </Layout>
+
+<style>
+  .name-block {
+    display: inline-block;
+  }
+
+  /* Στο κινητό το όνομα σπάει σε δύο σειρές, ώστε η γραμμή να έχει το πλάτος του */
+  .name br {
+    display: none;
+  }
+
+  .name-rule {
+    height: 2px;
+    margin-top: 14px;
+    background: var(--text);
+  }
+
+  .covers {
+    display: grid;
+    gap: 28px;
+    width: min(100%, 520px);
+    margin: 0 auto;
+  }
+
+  .covers .preview {
+    width: 100%;
+  }
+
+  .covers .preview img {
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    object-position: center 25%;
+  }
+
+  .editorial-text {
+    max-width: 560px;
+    margin: 0 0 36px;
+    color: var(--muted);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 760px) {
+    .name br {
+      display: inline;
+    }
+
+    .name-rule {
+      margin-top: 10px;
+    }
+
+    .covers {
+      gap: 18px;
+      width: min(100%, 420px);
+    }
+  }
+</style>
