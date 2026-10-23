@@ -113,17 +113,6 @@ main {
   margin: 0 auto;
 }
 
-.meta {
-  width: min(100%, 520px);
-  margin: 0 auto 12px;
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 12px;
-  color: var(--muted);
-}
-
 .preview {
   display: block;
   width: min(100%, 520px);
@@ -312,12 +301,6 @@ footer {
   border-color: var(--text);
 }
 
-.form-note {
-  color: var(--muted);
-  font-size: 12px;
-  margin-top: 8px;
-}
-
 .editorial-body {
   max-width: 900px;
   margin: 0 auto;
@@ -364,13 +347,6 @@ footer {
 
   main {
     padding: 54px 18px 18px;
-  }
-
-  .meta {
-    display: block;
-    width: min(100%, 420px);
-    margin-bottom: 10px;
-    line-height: 1.55;
   }
 
   .preview {
@@ -420,6 +396,3 @@ footer {
     margin-bottom: 18px;
   }
 }
-
-/* Απόσταση ανάμεσα σε διαδοχικά editorials στην αρχική (ισχύει μόνο όταν υπάρχουν 2+) */
-.preview + .meta { margin-top: 70px; }

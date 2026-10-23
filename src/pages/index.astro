@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
 import { getEditorials } from '../lib/editorials';
 
@@ -34,7 +35,13 @@ const instagram = 'https://www.instagram.com/nickospanagiotopoulos';
   <div class="covers">
     {editorials.map((e) => (
       <a class="preview" href={`#editorial-${e.slug}`} aria-label={`Open ${e.title} editorial`}>
-        <img src={e.cover.src} width={e.cover.width} height={e.cover.height} alt={`${e.title} preview`}>
+        <Image
+          src={e.cover}
+          widths={[480, 840, 1040, 1280]}
+          sizes="(max-width: 760px) min(calc(100vw - 36px), 420px), 520px"
+          loading="eager"
+          alt={`${e.title} preview`}
+        />
       </a>
     ))}
   </div>
@@ -63,16 +70,7 @@ const instagram = 'https://www.instagram.com/nickospanagiotopoulos';
           {editorials.map((e) => (
             <li>{e.description ? `${e.title} — ${e.description}` : e.title}</li>
           ))}
-          <li>Fashion stories</li>
-          <li>Portrait studies</li>
         </ul>
-      </div>
-    </div>
-
-    <div class="page-grid">
-      <div class="page-label">Publications</div>
-      <div class="page-content">
-        Selected features, magazine work and online publications can be placed here.
       </div>
     </div>
   </div>
@@ -114,10 +112,6 @@ const instagram = 'https://www.instagram.com/nickospanagiotopoulos';
 
           <button class="submit-button" type="submit">Send</button>
         </form>
-
-        <p class="form-note">
-          Demo version: currently uses mailto. For the final online site we connect this to a real form service or hosting script so the message arrives directly to your inbox.
-        </p>
       </div>
     </div>
 
@@ -144,7 +138,12 @@ const instagram = 'https://www.instagram.com/nickospanagiotopoulos';
     <div class="editorial-body">
       {e.text && <p class="editorial-text">{e.text}</p>}
       {e.photos.map((photo, i) => (
-        <img src={photo.src} width={photo.width} height={photo.height} alt={`${e.title} editorial image ${i + 1}`}>
+        <Image
+          src={photo}
+          widths={[640, 960, 1280]}
+          sizes="(max-width: 760px) calc(100vw - 36px), min(calc(100vw - 56px), 844px)"
+          alt={`${e.title} editorial image ${i + 1}`}
+        />
       ))}
     </div>
   </div>
