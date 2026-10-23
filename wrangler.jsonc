@@ -1,0 +1,8 @@
+// Ρυθμίσεις για το ανέβασμα στο Cloudflare: σερβίρει το έτοιμο site από τον φάκελο dist/.
+{
+  "name": "nikos-panagiotopoulos",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist"
+  }
+}
