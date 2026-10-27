@@ -18,7 +18,6 @@ type EditorialInfo = {
   order?: number;
   category?: Category;
   magazineOrder?: number;
-  magazinePreview?: string;
 };
 
 export type Editorial = {
@@ -33,7 +32,6 @@ export type Editorial = {
   category: Category;
   magazineOrder: number;
   cover: ImageMetadata;
-  magazinePreview: ImageMetadata;
   photos: ImageMetadata[];
 };
 
@@ -68,13 +66,6 @@ export function getEditorials(): Editorial[] {
           `src/editorials/${slug}/editorial.json: η εικόνα εξωφύλλου "${info.cover}" δεν βρέθηκε στον φάκελο.`,
         );
       }
-      const previewName = info.magazinePreview ?? info.cover;
-      const previewPath = files.find((p) => fileOf(p) === previewName);
-      if (!previewPath) {
-        throw new Error(
-          `src/editorials/${slug}/editorial.json: η εικόνα "${previewName}" του "magazinePreview" δεν βρέθηκε στον φάκελο.`,
-        );
-      }
       const category = info.category ?? 'editorials';
       if (!categories.includes(category)) {
         throw new Error(
@@ -94,7 +85,6 @@ export function getEditorials(): Editorial[] {
         category,
         magazineOrder: info.magazineOrder ?? Number.MAX_SAFE_INTEGER,
         cover: images[coverPath],
-        magazinePreview: images[previewPath],
         photos: files.map((p) => images[p]),
       };
     })

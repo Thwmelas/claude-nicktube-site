@@ -83,19 +83,8 @@ const photoQuality = 90;
             <ul class="magazine-list">
               {section.items.map((e) => (
                 <li>
-                  <a class="magazine-item" href={`#editorial-${e.slug}`}>
-                    <div>
-                      <div class="magazine-title">{e.title}</div>
-                      {e.description && <div class="magazine-sub">{e.description}</div>}
-                    </div>
-                    <Image
-                      class="magazine-thumb"
-                      src={e.magazinePreview}
-                      widths={[90, 180, 270]}
-                      sizes="(max-width: 760px) 56px, 72px"
-                      alt=""
-                    />
-                  </a>
+                  <a class="magazine-title" href={`#editorial-${e.slug}`}>{e.title}</a>
+                  {e.description && <div class="magazine-sub">{e.description}</div>}
                 </li>
               ))}
             </ul>
@@ -390,14 +379,6 @@ document.querySelectorAll('.menu-panel a').forEach(function(link) {
     margin-bottom: 22px;
   }
 
-  /* Κάθε τίτλος του Magazines: κείμενο αριστερά και μια κάθετη (9:16) εικόνα-σελιδοδείκτης δεξιά. */
-  .magazine-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-  }
-
   .magazine-title {
     font-family: Georgia, "Times New Roman", Times, serif;
     font-size: 22px;
@@ -408,31 +389,17 @@ document.querySelectorAll('.menu-panel a').forEach(function(link) {
     transition: opacity .2s ease;
   }
 
-  .magazine-thumb {
-    flex: none;
-    width: 72px;
-    height: auto;
-    aspect-ratio: 9 / 16;
-    object-fit: cover;
-    object-position: center 25%;
-    transition: filter .35s ease;
+  .magazine-title {
+    display: inline-block;
   }
 
-  .magazine-item:active .magazine-title {
+  .magazine-title:active {
     opacity: .6;
   }
 
-  .magazine-item:active .magazine-thumb {
-    filter: brightness(.7);
-  }
-
   @media (hover: hover) {
-    .magazine-item:hover .magazine-title {
+    .magazine-title:hover {
       opacity: .6;
-    }
-
-    .magazine-item:hover .magazine-thumb {
-      filter: brightness(.7);
     }
   }
 
@@ -673,10 +640,6 @@ document.querySelectorAll('.menu-panel a').forEach(function(link) {
 
     .editorial-title {
       -webkit-text-stroke-width: .25px;
-    }
-
-    .magazine-thumb {
-      width: 56px;
     }
 
     .gallery {
