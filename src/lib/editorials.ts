@@ -2,7 +2,7 @@ import type { ImageMetadata } from 'astro';
 
 // Κάθε editorial είναι ένας φάκελος μέσα στο src/editorials/ με:
 //   - τις φωτογραφίες του (εμφανίζονται με αλφαβητική σειρά ονόματος αρχείου)
-//   - ένα editorial.json με τίτλο, εικόνα εξωφύλλου και προαιρετικά κείμενο
+//   - ένα editorial.json με τίτλο, εικόνα εξωφύλλου και προαιρετικά περιοδικό, μοντέλα, κείμενο
 
 export const categories = ['covers', 'editorials'] as const;
 export type Category = (typeof categories)[number];
@@ -11,6 +11,8 @@ type EditorialInfo = {
   title: string;
   cover: string;
   description?: string;
+  magazine?: string;
+  models?: string;
   text?: string;
   order?: number;
   category?: Category;
@@ -21,6 +23,8 @@ export type Editorial = {
   slug: string;
   title: string;
   description?: string;
+  magazine?: string;
+  models?: string;
   text?: string;
   order: number;
   category: Category;
@@ -71,6 +75,8 @@ export function getEditorials(): Editorial[] {
         slug,
         title: info.title,
         description: info.description,
+        magazine: info.magazine,
+        models: info.models,
         text: info.text,
         order: info.order ?? Number.MAX_SAFE_INTEGER,
         category,
