@@ -242,17 +242,14 @@ document.querySelectorAll('.menu-panel a').forEach(function(link) {
   });
 })();
 
-// Κινητό: σκούρεμα του εξωφύλλου που βρίσκεται στο κέντρο της οθόνης κατά το scroll.
-// Μόνο σε οθόνες αφής, γιατί στον υπολογιστή υπάρχει το σκούρεμα με το ποντίκι.
-(function() {
-  if (!window.matchMedia('(hover: none)').matches || !('IntersectionObserver' in window)) return;
-  var observer = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
-      entry.target.classList.toggle('is-focused', entry.isIntersecting);
-    });
-  }, { rootMargin: '-45% 0px -45% 0px' });
-  document.querySelectorAll('.covers .preview').forEach(function(cover) { observer.observe(cover); });
-})();
+// Κινητό: όσο το δάχτυλο ακουμπάει ένα εξώφυλλο (για scroll ή για πάτημα), αυτό σκουραίνει.
+// Με το :active του CSS δεν γίνεται αξιόπιστα, γιατί τα κινητά το ακυρώνουν μόλις αρχίσει το scroll.
+document.querySelectorAll('.covers .preview').forEach(function(cover) {
+  function release() { cover.classList.remove('is-focused'); }
+  cover.addEventListener('touchstart', function() { cover.classList.add('is-focused'); }, { passive: true });
+  cover.addEventListener('touchend', release);
+  cover.addEventListener('touchcancel', release);
+});
 
 // Lightbox: πατώντας μια φωτογραφία μέσα σε editorial, ανοίγει μόνη της σε άσπρο φόντο,
 // με βελάκια για την προηγούμενη / επόμενη φωτογραφία του ίδιου editorial.
@@ -381,8 +378,8 @@ document.querySelectorAll('.menu-panel a').forEach(function(link) {
     }
   }
 
-  /* Στο κινητό: το εξώφυλλο που περνάει από το κέντρο της οθόνης στο scroll σκουραίνει έντονα,
-     σαν να επιλέγεται πριν πατηθεί (η κλάση μπαίνει από το script). */
+  /* Στο κινητό: το εξώφυλλο που ακουμπάει το δάχτυλο σκουραίνει έντονα, σαν να επιλέγεται
+     πριν πατηθεί (η κλάση μπαίνει από το script). */
   .covers .preview.is-focused img {
     filter: brightness(.45);
     transition-duration: .5s;
