@@ -83,8 +83,19 @@ const photoQuality = 90;
             <ul class="magazine-list">
               {section.items.map((e) => (
                 <li>
-                  <a class="magazine-title" href={`#editorial-${e.slug}`}>{e.title}</a>
-                  {e.description && <div class="magazine-sub">{e.description}</div>}
+                  <a class="magazine-item" href={`#editorial-${e.slug}`}>
+                    <div>
+                      <div class="magazine-title">{e.title}</div>
+                      {e.description && <div class="magazine-sub">{e.description}</div>}
+                    </div>
+                    <Image
+                      class="magazine-thumb"
+                      src={e.magazinePreview}
+                      widths={[90, 180, 270]}
+                      sizes="(max-width: 760px) 56px, 72px"
+                      alt=""
+                    />
+                  </a>
                 </li>
               ))}
             </ul>
@@ -169,6 +180,7 @@ const photoQuality = 90;
 
     <div class="editorial-body">
       {e.models && <p class="editorial-models">{e.models}</p>}
+      {e.note && <p class="editorial-note">{e.note}</p>}
       {e.text && (
         <div class="editorial-text">
           {e.text.split(/\n\s*\n/).map((paragraph) => (
@@ -378,6 +390,14 @@ document.querySelectorAll('.menu-panel a').forEach(function(link) {
     margin-bottom: 22px;
   }
 
+  /* Κάθε τίτλος του Magazines: κείμενο αριστερά και μια κάθετη (9:16) εικόνα-σελιδοδείκτης δεξιά. */
+  .magazine-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
   .magazine-title {
     font-family: Georgia, "Times New Roman", Times, serif;
     font-size: 22px;
@@ -387,13 +407,31 @@ document.querySelectorAll('.menu-panel a').forEach(function(link) {
     transition: opacity .2s ease;
   }
 
-  .magazine-title:active {
+  .magazine-thumb {
+    flex: none;
+    width: 72px;
+    height: auto;
+    aspect-ratio: 9 / 16;
+    object-fit: cover;
+    object-position: center 25%;
+    transition: filter .35s ease;
+  }
+
+  .magazine-item:active .magazine-title {
     opacity: .6;
   }
 
+  .magazine-item:active .magazine-thumb {
+    filter: brightness(.7);
+  }
+
   @media (hover: hover) {
-    .magazine-title:hover {
+    .magazine-item:hover .magazine-title {
       opacity: .6;
+    }
+
+    .magazine-item:hover .magazine-thumb {
+      filter: brightness(.7);
     }
   }
 
@@ -569,6 +607,16 @@ document.querySelectorAll('.menu-panel a').forEach(function(link) {
     color: var(--text);
   }
 
+  .editorial-note {
+    max-width: 560px;
+    margin: 0 0 18px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .02em;
+    line-height: 1.5;
+    color: var(--text);
+  }
+
   .editorial-text {
     max-width: 560px;
     margin: 0 0 36px;
@@ -624,6 +672,10 @@ document.querySelectorAll('.menu-panel a').forEach(function(link) {
 
     .editorial-title {
       -webkit-text-stroke-width: .25px;
+    }
+
+    .magazine-thumb {
+      width: 56px;
     }
 
     .gallery {
