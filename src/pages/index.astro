@@ -14,7 +14,7 @@ const email = 'nickofow@gmail.com';
 // Πολλά έτοιμα μεγέθη ανά φωτογραφία, ώστε κάθε οθόνη να παίρνει ένα αρχείο σχεδόν ίσο με
 // το μέγεθος που δείχνει. Αλλιώς ο browser μικραίνει πολύ τη φωτογραφία στον υπολογιστή
 // και τη «σκληραίνει».
-const photoWidths = [360, 420, 520, 640, 760, 844, 960, 1040, 1280];
+const photoWidths = [180, 270, 360, 420, 520, 640, 760, 844, 960, 1040, 1280];
 const photoQuality = 90;
 ---
 
@@ -171,15 +171,17 @@ const photoQuality = 90;
           ))}
         </div>
       )}
-      {e.photos.map((photo, i) => (
-        <Image
-          src={photo}
-          widths={photoWidths}
-          quality={photoQuality}
-          sizes="(max-width: 760px) calc(100vw - 36px), min(calc(100vw - 56px), 844px)"
-          alt={`${e.title} editorial image ${i + 1}`}
-        />
-      ))}
+      <div class="gallery">
+        {e.photos.map((photo, i) => (
+          <Image
+            src={photo}
+            widths={photoWidths}
+            quality={photoQuality}
+            sizes="(max-width: 760px) calc((100vw - 44px) / 2), min(calc((100vw - 96px) / 3), 268px)"
+            alt={`${e.title} editorial image ${i + 1}`}
+          />
+        ))}
+      </div>
     </div>
   </div>
 ))}
@@ -514,6 +516,32 @@ document.querySelectorAll('.menu-panel a').forEach(function(link) {
     font-size: 12px;
   }
 
+  /* Οι φωτογραφίες ενός editorial ως πλέγμα: 3 στη σειρά σε υπολογιστή, 2 στο κινητό.
+     Κόβονται όλες σε 2:3 για ομοιόμορφο πλέγμα. Ολόκληρες φαίνονται στην προβολή. */
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .gallery img {
+    margin: 0;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    object-position: center 25%;
+    transition: filter .35s ease;
+  }
+
+  .gallery img:active {
+    filter: brightness(.7);
+  }
+
+  @media (hover: hover) {
+    .gallery img:hover {
+      filter: brightness(.7);
+    }
+  }
+
   .editorial-text {
     max-width: 560px;
     margin: 0 0 36px;
@@ -566,6 +594,11 @@ document.querySelectorAll('.menu-panel a').forEach(function(link) {
 
     .lightbox-next {
       right: calc(50% - 72px);
+    }
+
+    .gallery {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
     }
 
     .covers {
