@@ -179,7 +179,7 @@ const photoQuality = 90;
 
     <div class="editorial-body">
       {e.models && <p class="editorial-models">{e.models}</p>}
-      {e.note && <p class="editorial-note">{e.note}</p>}
+      {e.note && <p class="editorial-note">{e.note.split('\n').map((line, i) => <>{i > 0 && <br />}{line}</>)}</p>}
       {e.text && (
         <div class="editorial-text">
           {e.text.split(/\n\s*\n/).map((paragraph) => (
