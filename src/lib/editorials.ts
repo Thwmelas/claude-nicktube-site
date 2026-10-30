@@ -2,14 +2,16 @@ import type { ImageMetadata } from 'astro';
 
 // Κάθε editorial είναι ένας φάκελος μέσα στο src/editorials/ με:
 //   - τις φωτογραφίες του (εμφανίζονται με αλφαβητική σειρά ονόματος αρχείου)
-//   - ένα editorial.json με τίτλο, εικόνα εξωφύλλου και προαιρετικά περιοδικό, μοντέλα, κείμενο
+//   - ένα editorial.json με τίτλο και προαιρετικά περιοδικό, μοντέλα, κείμενο
+// Εξώφυλλο στην αρχική είναι η πρώτη φωτογραφία (π.χ. 00.jpg ή 01.jpg), εκτός αν το
+// editorial.json ορίζει άλλη με το "cover".
 
 export const categories = ['covers', 'editorials'] as const;
 export type Category = (typeof categories)[number];
 
 type EditorialInfo = {
   title: string;
-  cover: string;
+  cover?: string;
   description?: string;
   magazine?: string;
   models?: string;
@@ -60,10 +62,10 @@ export function getEditorials(): Editorial[] {
       if (!info.title) {
         throw new Error(`src/editorials/${slug}/editorial.json: λείπει το "title".`);
       }
-      const coverPath = files.find((p) => fileOf(p) === info.cover);
+      const coverPath = info.cover ? files.find((p) => fileOf(p) === info.cover) : files[0];
       if (!coverPath) {
         throw new Error(
-          `src/editorials/${slug}/editorial.json: η εικόνα εξωφύλλου "${info.cover}" δεν βρέθηκε στον φάκελο.`,
+          `src/editorials/${slug}/editorial.json: η εικόνα εξωφύλλου "${info.cover ?? '(πρώτη φωτογραφία)'}" δεν βρέθηκε στον φάκελο.`,
         );
       }
       const category = info.category ?? 'editorials';
