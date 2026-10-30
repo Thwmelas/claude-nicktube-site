@@ -11,6 +11,10 @@ const magazineSections = [
 const instagram = 'https://www.instagram.com/nickospanagiotopoulos';
 const email = 'nickofow@gmail.com';
 
+// Cloudflare Turnstile (προστασία της φόρμας από bots). Το site key είναι δημόσιο και μπαίνει
+// εδώ. Όσο είναι κενό, το Turnstile δεν εμφανίζεται.
+const turnstileSiteKey = '';
+
 // Πολλά έτοιμα μεγέθη ανά φωτογραφία, ώστε κάθε οθόνη να παίρνει ένα αρχείο σχεδόν ίσο με
 // το μέγεθος που δείχνει. Αλλιώς ο browser μικραίνει πολύ τη φωτογραφία στον υπολογιστή
 // και τη «σκληραίνει».
@@ -136,6 +140,12 @@ const photoQuality = 90;
             <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
           </div>
 
+          <input type="hidden" name="elapsed" value="">
+
+          {turnstileSiteKey && (
+            <div class="cf-turnstile" data-sitekey={turnstileSiteKey} data-appearance="interaction-only" data-theme="light"></div>
+          )}
+
           <button class="submit-button" type="submit">Send</button>
         </form>
 
@@ -205,6 +215,8 @@ const photoQuality = 90;
   </button>
 </div>
 
+{turnstileSiteKey && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
+
 <script is:inline define:vars={{ email }}>
 document.querySelectorAll('.menu-panel a').forEach(function(link) {
   link.addEventListener('click', function() {
@@ -219,6 +231,9 @@ document.querySelectorAll('.menu-panel a').forEach(function(link) {
   var button = form.querySelector('button');
   var sentText = 'Thank you, your message has been sent.';
   var errorText = 'Something went wrong. Please email ' + email + ' directly.';
+  var waitText = 'One moment, please, then press Send again.';
+  var openedAt = Date.now();
+  var captcha = form.querySelector('.cf-turnstile');
 
   // Χωρίς JavaScript η φόρμα επιστρέφει εδώ με ?sent=1 ή ?error=1.
   var params = new URLSearchParams(location.search);
@@ -227,6 +242,12 @@ document.querySelectorAll('.menu-panel a').forEach(function(link) {
 
   form.addEventListener('submit', function(event) {
     event.preventDefault();
+    // Ο έλεγχος του Turnstile γίνεται στο παρασκήνιο· αν δεν έχει τελειώσει ακόμα, περιμένουμε.
+    if (captcha && !form.querySelector('[name="cf-turnstile-response"]')?.value) {
+      status.textContent = waitText;
+      return;
+    }
+    form.elements.elapsed.value = String(Date.now() - openedAt);
     button.disabled = true;
     status.textContent = 'Sending…';
 
@@ -238,7 +259,11 @@ document.querySelectorAll('.menu-panel a').forEach(function(link) {
         status.textContent = sentText;
       })
       .catch(function() { status.textContent = errorText; })
-      .finally(function() { button.disabled = false; });
+      .finally(function() {
+        button.disabled = false;
+        // Κάθε έλεγχος του Turnstile ισχύει για ένα μόνο μήνυμα.
+        if (captcha && window.turnstile) window.turnstile.reset(captcha);
+      });
   });
 })();
 

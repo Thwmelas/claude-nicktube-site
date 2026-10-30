@@ -5,6 +5,7 @@ import { EmailMessage } from 'cloudflare:email';
 const TO = 'nickofow@gmail.com';
 const FROM = 'contact@nikospanagiotopoulos.com';
 const DOMAIN = 'nikospanagiotopoulos.com';
+const MIN_FILL_MS = 3000;
 
 export default {
   async fetch(request, env) {
@@ -37,6 +38,24 @@ async function handleContact(request, env) {
 
   // Κρυφό πεδίο: το συμπληρώνουν μόνο τα bots, οπότε το μήνυμα αγνοείται σιωπηλά.
   if (field(form, 'website')) return reply(true, 200);
+
+  // Πόση ώρα ήταν ανοιχτή η σελίδα πριν το Send (το μετράει το script της σελίδας).
+  // Χωρίς αυτό, το μήνυμα δεν ήρθε από τη σελίδα αλλά απευθείας από bot.
+  // Κάτω από 3 δευτερόλεπτα, κανένας άνθρωπος δεν προλαβαίνει να γράψει, οπότε αγνοείται σιωπηλά.
+  const elapsed = field(form, 'elapsed');
+  if (!/^\d+$/.test(elapsed)) return reply(false, 400);
+  if (Number(elapsed) < MIN_FILL_MS) return reply(true, 200);
+
+  // Cloudflare Turnstile: ελέγχει ότι ο επισκέπτης είναι άνθρωπος. Ενεργό μόλις οριστεί το
+  // secret TURNSTILE_SECRET_KEY στις ρυθμίσεις του Worker στο Cloudflare.
+  if (env.TURNSTILE_SECRET_KEY) {
+    const human = await verifyTurnstile(
+      env.TURNSTILE_SECRET_KEY,
+      field(form, 'cf-turnstile-response'),
+      request.headers.get('CF-Connecting-IP'),
+    );
+    if (!human) return reply(false, 403);
+  }
 
   const name = singleLine(field(form, 'Name'), 100);
   const surname = singleLine(field(form, 'Surname'), 100);
@@ -71,6 +90,23 @@ async function handleContact(request, env) {
   }
 
   return reply(true, 200);
+}
+
+async function verifyTurnstile(secret, token, ip) {
+  if (!token) return false;
+  const body = new FormData();
+  body.append('secret', secret);
+  body.append('response', token);
+  if (ip) body.append('remoteip', ip);
+  try {
+    const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', { method: 'POST', body });
+    const result = await response.json();
+    if (!result.success) console.warn('Turnstile rejected:', result['error-codes']);
+    return result.success === true;
+  } catch (err) {
+    console.error('Turnstile check failed:', err);
+    return false;
+  }
 }
 
 function field(form, name) {
